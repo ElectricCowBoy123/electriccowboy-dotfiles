@@ -1,0 +1,58 @@
+{
+    "packages": {
+        "dnf": {
+            "essential": [
+                "git",
+                "flatpak"
+            ],
+            "gnome": [
+                "gnome-tweaks",
+                "gnome-extensions-app"
+            ],
+            "gaming": [
+                "gamescope",
+                "steam"
+            ]
+        },
+        "apt": {
+            "essential": [
+                "git",
+                "flatpak"
+            ],
+            "gnome": [
+                "gnome-tweaks",
+                "gnome-extensions-app"
+            ],
+            "gaming": [
+                "gamescope",
+                "steam"
+            ]
+        }
+    },
+    "settings":{
+        "gnome-settings":{
+            "enable-this-random-setting": true
+        }
+    },
+    "git": [
+        "https://github.com/vinceliuice/WhiteSur-gtk-theme.git",
+        "https://github.com/vinceliuice/McMojave-circle.git",
+        "https://github.com/ohmyzsh/ohmyzsh.git",
+        "https://github.com/romkatv/powerlevel10k.git"
+    ],
+    "backgrounds": [
+        ""
+    ],
+    "flatpaks": [
+        "ca.desrt.dconf-editor",
+        "net.lutris.Lutris",
+        "com.github.tchx84.Flatseal",
+        "io.missioncenter.MissionCenter",
+        "com.github.Matoking.protontricks",
+        "net.davidotek.pupgui2",
+        "org.freedesktop.Platform.VulkanLayer.gamescope",
+        "org.freedesktop.Platform.VulkanLayer.MangoHud"
+    ],
+    "nvidia-drivers": true,
+    "update": true
+}
