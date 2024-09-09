@@ -12,6 +12,10 @@
             "gaming": [
                 "gamescope",
                 "steam"
+            ],
+            "browsers": [
+                "chromium",
+                "firefox"
             ]
         },
         "apt": {

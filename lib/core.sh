@@ -99,21 +99,27 @@ parse_json(){
     nvidia_drivers=$(jq -r '.["nvidia-drivers"]' "$JSON_DIR")
 
     if [[ ${pacman[0]} == "dnf" ]]; then
-        packages=$(jq -r ".packages.${pacman[0]}.essential[]" "$JSON_DIR" | tr '\n' ' ')
-        packages+=$(jq -r ".packages.${pacman[0]}.gnome[]" "$JSON_DIR" | tr '\n' ' ')
-        packages+=$(jq -r ".packages.${pacman[0]}.gaming[]" "$JSON_DIR" | tr '\n' ' ' | sed 's/ $//')
+        packages=""
+        elements=$(jq -r ".packages.${pacman[0]}[] | .[]" "$JSON_DIR")
+        while IFS= read -r element; do
+            packages+="$element "
+        done <<< "$elements"
     fi
 
     if [[ ${pacman[0]} == "apt-get" ]]; then
-        packages=$(jq -r ".packages.${pacman[0]}.essential[]" "$JSON_DIR" | tr '\n' ' ')
-        packages+=$(jq -r ".packages.${pacman[0]}.gnome[]" "$JSON_DIR" | tr '\n' ' ')
-        packages+=$(jq -r ".packages.${pacman[0]}.gaming[]" "$JSON_DIR" | tr '\n' ' ' | sed 's/ $//')
+        packages=""
+        elements=$(jq -r ".packages.${pacman[0]}[] | .[]" "$JSON_DIR")
+        while IFS= read -r element; do
+            packages+="$element "
+        done <<< "$elements"
     fi
 
     if [[ ${pacman[0]} == "apt" ]]; then
-        packages=$(jq -r ".packages.${pacman[0]}.essential[]" "$JSON_DIR" | tr '\n' ' ')
-        packages+=$(jq -r ".packages.${pacman[0]}.gnome[]" "$JSON_DIR" | tr '\n' ' ')
-        packages+=$(jq -r ".packages.${pacman[0]}.gaming[]" "$JSON_DIR" | tr '\n' ' ' | sed 's/ $//')
+        packages=""
+        elements=$(jq -r ".packages.${pacman[0]}[] | .[]" "$JSON_DIR")
+        while IFS= read -r element; do
+            packages+="$element "
+        done <<< "$elements"
     fi
 }
 
