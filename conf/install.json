@@ -58,5 +58,5 @@
         "org.freedesktop.Platform.VulkanLayer.MangoHud"
     ],
     "nvidia-drivers": true,
-    "update": true
+    "update-os": true
 }

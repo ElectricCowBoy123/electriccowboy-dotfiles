@@ -103,6 +103,8 @@ parse_json(){
 
     str_nvidia_drivers=$(jq -r '.["nvidia-drivers"]' "$JSON_DIR")
 
+    str_update_os=$(jq -r '.["update-os"]' "$JSON_DIR")
+
     if [[ ${arrStr_pacman[0]} == "dnf" ]]; then
         str_packages=""
         str_elements=$(jq -r ".packages.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
@@ -167,6 +169,11 @@ install_packages(){
         printf "\n${GREEN}%s\n${RESET}\n" "Installing Package(s) '$1'..."
         dnf install -y ${1} || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '$1'"; exit 1; }
 
+        if [[ $str_update_os == "true" ]]; then
+            printf "\n${GREEN}%s\n${RESET}\n" "Performing OS Update (Upgrade)..."
+            dnf upgrade --refresh -y || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to dnf upgrade!"; exit 1; }
+        fi
+
         return 0
     fi
 
@@ -176,6 +183,12 @@ install_packages(){
 
         printf "\n${GREEN}%s\n${RESET}\n" "Installing Package(s) '$1'..."
         apt install "${1}" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '$1'"; exit 1; }
+
+        if [[ $str_update_os == "true" ]]; then
+            printf "\n${GREEN}%s\n${RESET}\n" "Performing OS Update (Upgrade)..."
+            apt upgrade -y || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to apt upgrade!"; exit 1; }
+        fi
+
         return 0
     fi
 
@@ -185,6 +198,12 @@ install_packages(){
 
         printf "\n${GREEN}%s\n${RESET}\n" "Installing Package(s) '$1'..."
         apt-get install "${1}" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '$1'"; exit 1; }
+
+        if [[ $str_update_os == "true" ]]; then
+            printf "\n${GREEN}%s\n${RESET}\n" "Performing OS Update (Upgrade)..."
+            apt-get upgrade -y || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to apt-get upgrade!"; exit 1; }
+        fi
+
         return 0
     fi
 }
