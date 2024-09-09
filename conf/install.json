@@ -36,6 +36,9 @@
     "settings":{
         "gnome-settings":{
             "enable-this-random-setting": true
+        },
+        "kde-settings":{
+            "enable-this-random-setting": true
         }
     },
     "git": [
