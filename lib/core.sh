@@ -260,7 +260,7 @@ handle_gits(){
             if [[ -f "/home/$SUDO_USER/.local/share/icons/McMojave-circle" && -f "/home/$SUDO_USER/.local/share/icons/McMojave-circle-dark" && -f "/home/$SUDO_USER/.local/share/icons/McMojave-circle-light" ]]; then
                 printf "\n${GREEN}%s\n${RESET}\n" "Installing 'McMojave-circle'..."
                 git clone "$str_git" "/home/$SUDO_USER/Downloads/McMojave-circle"
-                # TODO
+                chmod +x "/home/$SUDO_USER/Downloads/McMojave-circle/install.sh"
             else
                 printf "\n${GREEN}%s\n${RESET}\n" "'McMojave-circle' Already Installed."
             fi
