@@ -33,6 +33,32 @@
             ]
         }
     },
+    "extensions":{
+        "gnome-extensions":[
+            "user-theme@gnome-shell-extensions.gcampax.github.com",
+            "ddterm@amezin.github.com",
+            "dash-to-dock@micxgx.gmail.com",
+            "logomenu@aryan_k",
+            "appindicatorsupport@rgcjonas.gmail.com",
+            "launch-new-instance@gnome-shell-extensions.gcampax.github.com",
+            "extension-list@tu.berry",
+            "top-bar-organizer@julian.gse.jsts.xyz",
+            "just-perfection-desktop@just-perfection",
+            "drive-menu@gnome-shell-extensions.gcampax.github.com",
+            "search-light@icedman.github.com",
+            "gsconnect@andyholmes.github.io",
+            "quick-settings-tweaks@qwreey",
+            "blur-my-shell@aunetx",
+            "clipboard-indicator@tudmotu.com",
+            "Vitals@CoreCoding.com",
+            "window-state-manager@kishorv06.github.io",
+            "pip-on-top@rafostar.github.com",
+            "maximize-to-workspace@rliang.github.com",
+            "MaximizeToEmptyWorkspace-extension@kaisersite.de",
+            "advanced-alt-tab@G-dH.github.com",
+            "putWindow@clemens.lab21.org"
+        ]
+    },
     "settings":{
         "gnome-settings":{
             "/org/gnome/settings-daemon/plugins/media-keys/home": "['<Super>e']",
