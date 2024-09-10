@@ -9,6 +9,9 @@
                 "gnome-tweaks",
                 "gnome-extensions-app"
             ],
+            "kde": [
+                "kvantum"
+            ],
             "gaming": [
                 "gamescope",
                 "steam"
@@ -76,7 +79,10 @@
         "https://github.com/vinceliuice/WhiteSur-gtk-theme.git",
         "https://github.com/vinceliuice/McMojave-circle.git",
         "https://github.com/ohmyzsh/ohmyzsh.git",
-        "https://github.com/romkatv/powerlevel10k.git"
+        "https://github.com/romkatv/powerlevel10k.git",
+        "https://github.com/vinceliuice/WhiteSur-kde.git",
+        "https://github.com/vinceliuice/WhiteSur-cursors.git",
+        "https://github.com/vinceliuice/WhiteSur-icon-theme.git"
     ],
     "backgrounds": [
         ""
