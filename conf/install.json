@@ -48,15 +48,11 @@
             "search-light@icedman.github.com",
             "gsconnect@andyholmes.github.io",
             "quick-settings-tweaks@qwreey",
-            "blur-my-shell@aunetx",
             "clipboard-indicator@tudmotu.com",
             "Vitals@CoreCoding.com",
             "window-state-manager@kishorv06.github.io",
             "pip-on-top@rafostar.github.com",
-            "maximize-to-workspace@rliang.github.com",
-            "MaximizeToEmptyWorkspace-extension@kaisersite.de",
-            "advanced-alt-tab@G-dH.github.com",
-            "putWindow@clemens.lab21.org"
+            "advanced-alt-tab@G-dH.github.com"
         ]
     },
     "settings":{
@@ -66,13 +62,10 @@
             "/org/gnome/settings-daemon/plugins/media-keys/calculator": "['<Super>c']",
             "/org/gnome/shell/keybindings/show-screenshot-ui": "['<Shift><Super>s']",
             "/org/gnome/desktop/wm/keybindings/panel-run-dialog": "['<Super>r']",
-
             "/org/gnome/desktop/wm/keybindings/switch-applications": "['']",
             "/org/gnome/desktop/wm/keybindings/switch-applications-backward": "['']",
-
             "/org/gnome/desktop/wm/keybindings/switch-windows": "['<Alt>Tab']",
             "/org/gnome/desktop/wm/keybindings/switch-windows-backward": "['<Shift><Alt>Tab']",
-
             "/org/gnome/settings-daemon/plugins/media-keys/logout": "['']"
         },
         "kde-settings":{
