@@ -35,7 +35,19 @@
     },
     "settings":{
         "gnome-settings":{
-            "enable-this-random-setting": true
+            "/org/gnome/settings-daemon/plugins/media-keys/home": "['<Super>e']",
+            "/org/gnome/settings-daemon/plugins/media-keys/control-center": "['<Super>i']",
+            "/org/gnome/settings-daemon/plugins/media-keys/calculator": "['<Super>c']",
+            "/org/gnome/shell/keybindings/show-screenshot-ui": "['<Shift><Super>s']",
+            "/org/gnome/desktop/wm/keybindings/panel-run-dialog": "['<Super>r']",
+
+            "/org/gnome/desktop/wm/keybindings/switch-applications": "['']",
+            "/org/gnome/desktop/wm/keybindings/switch-applications-backward": "['']",
+
+            "/org/gnome/desktop/wm/keybindings/switch-windows": "['<Alt>Tab']",
+            "/org/gnome/desktop/wm/keybindings/switch-windows-backward": "['<Shift><Alt>Tab']",
+
+            "/org/gnome/settings-daemon/plugins/media-keys/logout": "['']"
         },
         "kde-settings":{
             "enable-this-random-setting": true
