@@ -109,6 +109,10 @@ while [[ $# -gt 0 ]]; do
             clean_up
             shift
             ;;
+        -d|--desktop)
+            printf "\n${ITALIC}${YELLOW}%s\n${RESET}" "Not Implemented!"
+            exit 0
+            ;;
         *)
             printf "${ITALIC}${RED}%s\n${RESET}" "[Error]: Unknown argument! '$1'"
             exit 0
