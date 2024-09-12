@@ -322,5 +322,5 @@ configure_desktop_environment(){
     # Install it and required dependencies
     # Detect the login manager if there is one, if not install gdm
     # Set the desktop environment to automatically start in gdm upon login
-    
+    echo "TODO"
 }
