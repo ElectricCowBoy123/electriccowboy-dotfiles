@@ -315,3 +315,12 @@ install_nvidia_drivers(){
 recommended_kde_config(){
     echo "TODO"
 }
+
+configure_desktop_environment(){
+    # Check if desktop environment currently exists
+    # Check specified desktop environment
+    # Install it and required dependencies
+    # Detect the login manager if there is one, if not install gdm
+    # Set the desktop environment to automatically start in gdm upon login
+    
+}
