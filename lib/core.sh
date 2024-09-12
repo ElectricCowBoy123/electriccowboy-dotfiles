@@ -313,5 +313,5 @@ install_nvidia_drivers(){
 }
 
 recommended_kde_config(){
-
+    echo "TODO"
 }

@@ -110,7 +110,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -d|--desktop)
-            printf "\n${ITALIC}${YELLOW}%s\n${RESET}" "Not Implemented!"
+            printf "\n${ITALIC}${YELLOW}%s\n${RESET}" "-d --desktop | Not Implemented!"
             exit 0
             ;;
         *)
