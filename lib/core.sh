@@ -12,6 +12,7 @@ help(){
     help_entry "-g, --gits" "Clones the Git Repositories Defined in the JSON File."
     help_entry "-s, --settings" "Applies Configuration Tweaks Defined in the JSON File."
     help_entry "-f, --flatpaks" "Installs Flatpaks Defined in the JSON File."
+    help_entry "-d, --desktop" "TODO: Install a Desktop Environment Defined in the JSON File."
 }
 
 help_entry() {
@@ -95,7 +96,7 @@ validate_json(){
 parse_json(){
     while IFS= read -r str_line; do
         arrStr_gits+=("$str_line")
-    done < <(jq -r ".git[]" "$JSON_DIR")
+    done < <(jq -r ".git[] | .[]?" "$JSON_DIR")
 
     while IFS= read -r str_line; do
         arrStr_flatpaks+=("$str_line")
@@ -220,50 +221,58 @@ handle_gits(){
     fi
 
     for str_git in "${arrStr_gits[@]}"; do
-        if [[ $str_git == "https://github.com/vinceliuice/WhiteSur-gtk-theme.git" ]]; then
-            if [[ -f "/home/$SUDO_USER/.themes/WhiteSur-Dark" && -f "/home/$SUDO_USER/.themes/WhiteSur-Light" ]]; then
-                printf  "\n${GREEN}%s\n${RESET}\n" "Installing 'WhiteSur-gtk-theme'..."
-                git clone --depth=1 "$str_git" "/home/$SUDO_USER/Downloads/WhiteSur-gtk-theme"
-                chmod +x "/home/$SUDO_USER/Downloads/WhiteSur-gtk-theme/install.sh"
+        if [[ $str_git == https://* && $str_git == *.git ]]; then
+            if [[ $str_git == "https://github.com/vinceliuice/WhiteSur-gtk-theme.git" ]]; then
+                if [[ ! -d "/home/$SUDO_USER/.themes/WhiteSur-Dark" && ! -d "/home/$SUDO_USER/.themes/WhiteSur-Light" ]]; then
+                    printf  "\n${GREEN}%s\n${RESET}\n" "Installing 'WhiteSur-gtk-theme'..."
+                    git clone --depth=1 "$str_git" "/home/$SUDO_USER/Downloads/WhiteSur-gtk-theme"
+                    chmod +x "/home/$SUDO_USER/Downloads/WhiteSur-gtk-theme/install.sh"
+                else
+                    printf "\n${GREEN}%s\n${RESET}\n" "'WhiteSur-gtk-theme' Already Installed."
+                fi
+            elif [[ $str_git == "https://github.com/ohmyzsh/ohmyzsh.git" ]]; then
+                if [[ ! -d "/home/$SUDO_USER/.oh-my-zsh" ]]; then
+                    printf  "\n${GREEN}%s\n${RESET}\n" "Installing 'ohmyzsh'..."
+                    git clone "$str_git" "/home/$SUDO_USER/Downloads/ohmyzsh"
+                    chmod +x "/home/$SUDO_USER/Downloads/ohmyzsh/tools/install.sh"
+                    sh "/home/$SUDO_USER/Downloads/ohmyzsh/tools/install.sh" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Error occurred installing 'ohmyzsh'! '$1'"; exit 1; }
+                else
+                    printf "\n${GREEN}%s\n${RESET}\n" "'ohmyzsh' Already Installed."
+                fi
+            elif [[ $str_git == "https://github.com/romkatv/powerlevel10k.git" ]]; then
+                if [[ ! $(grep -Fxq "source /home/$SUDO_USER/.powerlevel10k/powerlevel10k.zsh-theme" /home/$SUDO_USER/.zshrc; echo $?) -ne 0 ]]; then
+                    printf "\n${GREEN}%s\n${RESET}\n" "Installing 'powerlevel10k' Recommended Font..."
+                    curl -L -o "/home/$SUDO_USER/Downloads/MesloLGS_NF_Regular.ttf" 'https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf'
+                    mv "/home/$SUDO_USER/Downloads/MesloLGS_NF_Regular.ttf" "/home/$SUDO_USER/.local/share/fonts/"
+                    fc-cache -fv
+                    printf "\n${GREEN}%s\n${RESET}\n" "Installing 'powerlevel10k'..."
+                    git clone --depth=1 "$str_git" "/home/$SUDO_USER/.powerlevel10k"
+                    echo 'source /home/$SUDO_USER/.powerlevel10k/powerlevel10k.zsh-theme' >>/home/$SUDO_USER/.zshrc
+                else
+                    printf "\n${GREEN}%s\n${RESET}\n" "'powerlevel10k' Already Installed."
+                fi
+            elif [[ $str_git == "https://github.com/vinceliuice/McMojave-circle.git" ]]; then
+                if [[ ! -d "/home/$SUDO_USER/.local/share/icons/McMojave-circle" && ! -d "/home/$SUDO_USER/.local/share/icons/McMojave-circle-dark" && ! -d "/home/$SUDO_USER/.local/share/icons/McMojave-circle-light" ]]; then
+                    printf "\n${GREEN}%s\n${RESET}\n" "Installing 'McMojave-circle'..."
+                    git clone "$str_git" "/home/$SUDO_USER/Downloads/McMojave-circle"
+                    chmod +x "/home/$SUDO_USER/Downloads/McMojave-circle/install.sh"
+                    sh "/home/$SUDO_USER/Downloads/McMojave-circle/install.sh" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Error occurred installing 'McMojave-circle'! '$1'"; exit 1; }
+                else
+                    printf "\n${GREEN}%s\n${RESET}\n" "'McMojave-circle' Already Installed."
+                fi
             else
-                printf "\n${GREEN}%s\n${RESET}\n" "'WhiteSur-gtk-theme' Already Installed."
+                repo_name=$(echo "$str_git" | sed -e 's/.*\/\(.*\)\.git/\1/')
+                if [[ ! -d "/home/$SUDO_USER/Downloads/$repo_name" ]]; then
+                    printf "\n${GREEN}%s\n${RESET}\n" "Installing '$repo_name'"
+                    git clone "$str_git" "/home/$SUDO_USER/Downloads/$repo_name"
+                    chmod +x "/home/$SUDO_USER/Downloads/$repo_name/install.sh"
+                    sh "/home/$SUDO_USER/Downloads/$repo_name/install.sh" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Error occurred installing '$repo_name'! '$str_git'"; exit 1; }
+                else
+                    printf "\n${GREEN}%s\n${RESET}\n" "'$repo_name' Already Installed."
+                fi
             fi
-        fi
-
-        if [[ $str_git == "https://github.com/ohmyzsh/ohmyzsh.git" ]]; then
-            if [[ -f "/home/$SUDO_USER/.oh-my-zsh" ]]; then
-                printf  "\n${GREEN}%s\n${RESET}\n" "Installing 'ohmyzsh'..."
-                git clone "$str_git" "/home/$SUDO_USER/Downloads/ohmyzsh"
-                chmod +x "/home/$SUDO_USER/Downloads/ohmyzsh/tools/install.sh"
-                sh "/home/$SUDO_USER/Downloads/ohmyzsh/tools/install.sh" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Error occurred installing 'ohmyzsh'! '$1'"; exit 1; }
-            else
-                printf "\n${GREEN}%s\n${RESET}\n" "'ohmyzsh' Already Installed."
-            fi
-        fi
-
-        if [[ $str_git == "https://github.com/romkatv/powerlevel10k.git" ]]; then
-            if [[ ! $(grep -Fxq "source /home/$SUDO_USER/.powerlevel10k/powerlevel10k.zsh-theme" /home/$SUDO_USER/.zshrc; echo $?) -ne 0 ]]; then
-                printf "\n${GREEN}%s\n${RESET}\n" "Installing 'powerlevel10k' Recommended Font..."
-                curl -L -o "/home/$SUDO_USER/Downloads/MesloLGS_NF_Regular.ttf" 'https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf'
-                mv "/home/$SUDO_USER/Downloads/MesloLGS_NF_Regular.ttf" "/home/$SUDO_USER/.local/share/fonts/"
-                fc-cache -fv
-
-                printf "\n${GREEN}%s\n${RESET}\n" "Installing 'powerlevel10k'..."
-                git clone --depth=1 "$str_git" "/home/$SUDO_USER/.powerlevel10k"
-                echo 'source /home/$SUDO_USER/.powerlevel10k/powerlevel10k.zsh-theme' >>/home/$SUDO_USER/.zshrc
-            else
-                printf "\n${GREEN}%s\n${RESET}\n" "'powerlevel10k' Already Installed."
-            fi
-        fi
-        
-        if [[ $str_git == "https://github.com/vinceliuice/McMojave-circle.git" ]]; then
-            if [[ -f "/home/$SUDO_USER/.local/share/icons/McMojave-circle" && -f "/home/$SUDO_USER/.local/share/icons/McMojave-circle-dark" && -f "/home/$SUDO_USER/.local/share/icons/McMojave-circle-light" ]]; then
-                printf "\n${GREEN}%s\n${RESET}\n" "Installing 'McMojave-circle'..."
-                git clone "$str_git" "/home/$SUDO_USER/Downloads/McMojave-circle"
-                chmod +x "/home/$SUDO_USER/Downloads/McMojave-circle/install.sh"
-            else
-                printf "\n${GREEN}%s\n${RESET}\n" "'McMojave-circle' Already Installed."
-            fi
+        else
+            printf "\n${RED}%s\n${RESET}\n" "'$str_git' is Not a Valid Repo!"
         fi
     done
 }
@@ -301,4 +310,8 @@ install_nvidia_drivers(){
             fi
         fi
     fi
+}
+
+recommended_kde_config(){
+
 }

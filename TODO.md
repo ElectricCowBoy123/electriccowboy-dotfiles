@@ -1,0 +1,2 @@
+- Allow overrides as arguments to the script such as -d 'gnome' or -g 'https://awdawd.dawdwad.git'
+- 

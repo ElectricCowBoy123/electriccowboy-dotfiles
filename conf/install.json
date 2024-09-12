@@ -75,15 +75,23 @@
             "enable-this-random-setting": true
         }
     },
-    "git": [
-        "https://github.com/vinceliuice/WhiteSur-gtk-theme.git",
-        "https://github.com/vinceliuice/McMojave-circle.git",
-        "https://github.com/ohmyzsh/ohmyzsh.git",
-        "https://github.com/romkatv/powerlevel10k.git",
-        "https://github.com/vinceliuice/WhiteSur-kde.git",
-        "https://github.com/vinceliuice/WhiteSur-cursors.git",
-        "https://github.com/vinceliuice/WhiteSur-icon-theme.git"
-    ],
+    "git": {
+        "gnome-gits":[
+            "https://github.com/vinceliuice/WhiteSur-gtk-theme.git",
+            "https://github.com/vinceliuice/McMojave-circle.git",
+            "https://github.com/vinceliuice/WhiteSur-cursors.git",
+            "https://github.com/vinceliuice/WhiteSur-icon-theme.git"
+        ],
+        "other-gits":[
+            "https://github.com/ohmyzsh/ohmyzsh.git",
+            "https://github.com/romkatv/powerlevel10k.git"
+        ],
+        "kde-gits":[
+            "https://github.com/vinceliuice/WhiteSur-kde.git",
+            "https://github.com/matinlotfali/KDE-Rounded-Corners.git",
+            "https://github.com/LukeShortCloud/winesapOS.git"
+        ]
+    },
     "backgrounds": [
         ""
     ],
@@ -98,5 +106,6 @@
         "org.freedesktop.Platform.VulkanLayer.MangoHud"
     ],
     "nvidia-drivers": true,
-    "update-os": true
+    "update-os": true,
+    "desktop-environment": "kde"
 }

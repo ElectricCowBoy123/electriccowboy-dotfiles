@@ -73,8 +73,6 @@ if [ $# -eq 0 ]; then
     exit 0
 fi
 
-echo "Starting..."
-
 # Parse Arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
