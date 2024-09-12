@@ -317,10 +317,14 @@ recommended_kde_config(){
 }
 
 configure_desktop_environment(){
-    # Check if desktop environment currently exists
-    # Check specified desktop environment
-    # Install it and required dependencies
-    # Detect the login manager if there is one, if not install gdm
-    # Set the desktop environment to automatically start in gdm upon login
-    echo "TODO"
+    if [[ -z $XDG_CURRENT_DESKTOP || -z $DESKTOP_SESSION ]]; then
+        printf "\n${RED}%s\n${RESET}\n" "A Valid Desktop Environment is Not Present!"
+        exit 1
+    else
+        echo "'$XDG_CURRENT_DESKTOP' is Already Installed!"
+        # Check specified desktop environment
+        # Install it and required dependencies
+        # Detect the login manager if there is one, if not install gdm
+        # Set the desktop environment to automatically start in gdm upon login
+    fi
 }
