@@ -39,3 +39,12 @@
 
 - Run Dialogue
 `` dconf write /org/gnome/desktop/wm/keybindings/panel-run-dialog "['<Super>r']" ``
+
+
+# KDE
+- Install theme
+- Install cursors
+- Apply all
+- 
+- Apply this rule to pip window https://preview.redd.it/bnx33qcy5qd71.png?width=625&format=png&auto=webp&s=d2947e2f41a509d4467f50afa6a0680f3eff94dd 
+- https://www.reddit.com/r/kde/comments/osjt3p/firefox_wayland_pip_workaround_or_how_i_learned/
