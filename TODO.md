@@ -1,2 +1,2 @@
 - Allow overrides as arguments to the script such as -d 'gnome' or -g 'https://awdawd.dawdwad.git'
-- 
+- Flesh out schema some more it needs to be more robust

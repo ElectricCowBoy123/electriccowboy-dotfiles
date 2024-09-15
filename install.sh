@@ -33,8 +33,8 @@ export RED="\033[1;31m";readonly RED;
 export YELLOW="\033[1;33m";readonly YELLOW;
 export ITALIC="\033[3m";readonly ITALIC;                                   
 
-arrStr_required_packages=("jq" "sed" "pip" "python")
-arrStr_required_pips=("jsonschema")
+readonly arrStr_required_packages=("jq" "sed" "pip" "python")
+readonly arrStr_required_pips=("jsonschema")
 readonly REPO_DIR="$(dirname "$(readlink -m "${0}")")"
 readonly JSON_DIR="${REPO_DIR}/conf/install.json"
 source "${REPO_DIR}/lib/core.sh"
