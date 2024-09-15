@@ -3,7 +3,9 @@
         "dnf": {
             "essential": [
                 "git",
-                "flatpak"
+                "flatpak",
+                "btop",
+                "imagemagick"
             ],
             "gnome": [
                 "gnome-tweaks",
@@ -56,6 +58,9 @@
             "window-state-manager@kishorv06.github.io",
             "pip-on-top@rafostar.github.com",
             "advanced-alt-tab@G-dH.github.com"
+        ],
+        "kde-extensions":[
+            "appstream://org.kde.yakuake.desktop"
         ]
     },
     "settings":{
