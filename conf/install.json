@@ -5,7 +5,7 @@
                 "git",
                 "flatpak",
                 "btop",
-                "imagemagick"
+                "ImageMagick"
             ],
             "gnome": [
                 "gnome-tweaks",
@@ -112,5 +112,7 @@
     ],
     "nvidia-drivers": true,
     "update-os": true,
-    "desktop-environment": "kde"
+    "desktop-environment": "kde",
+    "login-manager": "gdm",
+    "display-server": "wayland"
 }

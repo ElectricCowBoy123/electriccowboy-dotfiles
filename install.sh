@@ -50,24 +50,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 if [ $# -eq 0 ]; then
-    printf "${MAGENTA}%s\n${RESET}" "
- ██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
- ██                                                                                                                      ██   
- ██   ███████ ██      ███████  ██████ ████████ ██████  ██  ██████  ██████  ██████  ██     ██ ██████   ██████  ██    ██   ██
- ██   ██      ██      ██      ██         ██    ██   ██ ██ ██      ██      ██    ██ ██     ██ ██   ██ ██    ██  ██  ██    ██
- ██   █████   ██      █████   ██         ██    ██████  ██ ██      ██      ██    ██ ██  █  ██ ██████  ██    ██   ████     ██
- ██   ██      ██      ██      ██         ██    ██   ██ ██ ██      ██      ██    ██ ██ ███ ██ ██   ██ ██    ██    ██      ██
- ██   ███████ ███████ ███████  ██████    ██    ██   ██ ██  ██████  ██████  ██████   ███ ███  ██████   ██████     ██      ██
- ██                                                                                                                      ██
- ██                                                                                                                      ██
- ██      ██████   ██████  ████████ ███████ ██ ██      ███████ ███████                                                    ██
- ██      ██   ██ ██    ██    ██    ██      ██ ██      ██      ██                                                         ██
- ██      ██   ██ ██    ██    ██    █████   ██ ██      █████   ███████                                                    ██
- ██      ██   ██ ██    ██    ██    ██      ██ ██      ██           ██                                                    ██
- ██   ██ ██████   ██████     ██    ██      ██ ███████ ███████ ███████                                                    ██
- ██                                                                                                                      ██
- ██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████  
-"
+    print_header
     printf "\n${ITALIC}${YELLOW}%s\n${RESET}" "No Arguments Supplied, Returning Help..."
     help
     exit 0
@@ -77,10 +60,18 @@ fi
 while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help)
+            print_header
             help
             exit 0
             ;;
-        -i|--install) 
+        -i|--install)
+        printf "${MAGENTA}%s\n${RESET}" "
+██ ███    ██ ███████ ████████  █████  ██      ██      
+██ ████   ██ ██         ██    ██   ██ ██      ██      
+██ ██ ██  ██ ███████    ██    ███████ ██      ██      
+██ ██  ██ ██      ██    ██    ██   ██ ██      ██      
+██ ██   ████ ███████    ██    ██   ██ ███████ ███████ 
+"
             # todo: implement subargments to install gaming packages etc
             check_required_packages "${arrStr_required_packages[@]}"
             check_package_managers
@@ -90,18 +81,52 @@ while [[ $# -gt 0 ]]; do
             clean_up
             shift
             ;;
+        -e|--extensions)
+            printf "${MAGENTA}%s${RESET}" "
+███████ ██   ██ ████████ ███████ ███    ██ ███████ ██  ██████  ███    ██ ███████ 
+██       ██ ██     ██    ██      ████   ██ ██      ██ ██    ██ ████   ██ ██      
+█████     ███      ██    █████   ██ ██  ██ ███████ ██ ██    ██ ██ ██  ██ ███████ 
+██       ██ ██     ██    ██      ██  ██ ██      ██ ██ ██    ██ ██  ██ ██      ██ 
+███████ ██   ██    ██    ███████ ██   ████ ███████ ██  ██████  ██   ████ ███████ 
+" 
+            # todo: implement subargments to install gaming packages etc
+            printf "${ITALIC}${YELLOW}%s\n\n${RESET}" "you did e"
+            clean_up
+            shift
+            ;;
         -g|--gits)
+            printf "${MAGENTA}%s${RESET}" "
+ ██████  ██ ████████ ███████ 
+██       ██    ██    ██      
+██   ███ ██    ██    ███████ 
+██    ██ ██    ██         ██ 
+ ██████  ██    ██    ███████ 
+"
             parse_json
             handle_gits "${arrStr_gits[@]}"
             clean_up
             shift
             ;;
         -s|--settings)
-            printf "${ITALIC}${YELLOW}%s\n\n${RESET}" "you did s"
+            printf "${MAGENTA}%s${RESET}" "
+███████ ███████ ████████ ████████ ██ ███    ██  ██████  ███████ 
+██      ██         ██       ██    ██ ████   ██ ██       ██      
+███████ █████      ██       ██    ██ ██ ██  ██ ██   ███ ███████ 
+     ██ ██         ██       ██    ██ ██  ██ ██ ██    ██      ██ 
+███████ ███████    ██       ██    ██ ██   ████  ██████  ███████ 
+"
+            #apply_settings
             clean_up
             shift
             ;;
         -f|--flatpaks)
+            printf "${MAGENTA}%s${RESET}" "
+███████ ██       █████  ████████ ██████   █████  ██   ██ ███████ 
+██      ██      ██   ██    ██    ██   ██ ██   ██ ██  ██  ██      
+█████   ██      ███████    ██    ██████  ███████ █████   ███████ 
+██      ██      ██   ██    ██    ██      ██   ██ ██  ██       ██ 
+██      ███████ ██   ██    ██    ██      ██   ██ ██   ██ ███████ 
+"
             arrStr_required_packages+=("flatpak")
             check_required_packages "${arrStr_required_packages[@]}"
             parse_json
@@ -110,11 +135,35 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -d|--desktop)
-            printf "\n${ITALIC}${YELLOW}%s\n${RESET}" "-d --desktop | Not Implemented!"
-            exit 0
+            printf "${MAGENTA}%s${RESET}" "
+██████  ███████ ███████ ██   ██ ████████  ██████  ██████  
+██   ██ ██      ██      ██  ██     ██    ██    ██ ██   ██ 
+██   ██ █████   ███████ █████      ██    ██    ██ ██████  
+██   ██ ██           ██ ██  ██     ██    ██    ██ ██      
+██████  ███████ ███████ ██   ██    ██     ██████  ██      
+"
+            check_package_managers
+            parse_json
+            detect_desktop_environment
+            install_desktop_environment
+            clean_up
+            shift
+            ;;
+        --info)
+            printf "${MAGENTA}%s${RESET}" "
+██ ███    ██ ███████  ██████  
+██ ████   ██ ██      ██    ██ 
+██ ██ ██  ██ █████   ██    ██ 
+██ ██  ██ ██ ██      ██    ██ 
+██ ██   ████ ██       ██████  
+"
+            system_information
+            clean_up
+            shift
             ;;
         *)
             printf "${ITALIC}${RED}%s\n${RESET}" "[Error]: Unknown argument! '$1'"
+            clean_up
             exit 0
             ;;
     esac

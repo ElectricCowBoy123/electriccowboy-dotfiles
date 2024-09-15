@@ -10,13 +10,44 @@ help(){
     help_entry "-h, --help" "Returns this Dialogue."
     help_entry "-i, --install" "Installs Software Defined in the JSON File, Nvidia Drivers if they're Needed & Updates all Packages."
     help_entry "-g, --gits" "Clones the Git Repositories Defined in the JSON File."
-    help_entry "-s, --settings" "Applies Configuration Tweaks Defined in the JSON File."
     help_entry "-f, --flatpaks" "Installs Flatpaks Defined in the JSON File."
     help_entry "-d, --desktop" "TODO: Install a Desktop Environment Defined in the JSON File."
+    help_entry "-e, --extensions" "TODO: Installs Extensions Defined in the JSON for the Current Desktop Environment."
+    help_entry "-s, --settings" "TODO: Applies Configuration Tweaks Defined in the JSON File."
 }
 
 help_entry() {
   printf "${BLUE}%s ${ITALIC}${CYAN}%s${MAGENTA}%s ${GREEN}%s\n${RESET}" "${1}" "${2}" "${3}" "${4}"
+}
+
+print_header(){
+    printf "${MAGENTA}%s\n${RESET}" "
+ ██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████
+ ██                                                                                                                      ██   
+ ██   ███████ ██      ███████  ██████ ████████ ██████  ██  ██████  ██████  ██████  ██     ██ ██████   ██████  ██    ██   ██
+ ██   ██      ██      ██      ██         ██    ██   ██ ██ ██      ██      ██    ██ ██     ██ ██   ██ ██    ██  ██  ██    ██
+ ██   █████   ██      █████   ██         ██    ██████  ██ ██      ██      ██    ██ ██  █  ██ ██████  ██    ██   ████     ██
+ ██   ██      ██      ██      ██         ██    ██   ██ ██ ██      ██      ██    ██ ██ ███ ██ ██   ██ ██    ██    ██      ██
+ ██   ███████ ███████ ███████  ██████    ██    ██   ██ ██  ██████  ██████  ██████   ███ ███  ██████   ██████     ██      ██
+ ██                                                                                                                      ██
+ ██                                                                                                                      ██
+ ██      ██████   ██████  ████████ ███████ ██ ██      ███████ ███████                                                    ██
+ ██      ██   ██ ██    ██    ██    ██      ██ ██      ██      ██                                                         ██
+ ██      ██   ██ ██    ██    ██    █████   ██ ██      █████   ███████                                                    ██
+ ██      ██   ██ ██    ██    ██    ██      ██ ██      ██           ██                                                    ██
+ ██   ██ ██████   ██████     ██    ██      ██ ███████ ███████ ███████                                                    ██
+ ██                                                                                                                      ██
+ ██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████  
+"
+}
+
+system_information(){
+    if command -v hostnamectl &> /dev/null; then
+        if command -v awk &> /dev/null; then
+            printf "\n${GREEN}%s${RESET}" "System Information"
+            printf "\n${ITALIC}${BLUE}%s\n${RESET}" "$(hostnamectl | awk '{$1=$1;print}')"
+        fi
+    fi
 }
 
 check_package_managers() {
@@ -106,6 +137,12 @@ parse_json(){
 
     str_update_os=$(jq -r '.["update-os"]' "$JSON_DIR")
 
+    str_desktop_environment=$(jq -r '.["desktop-environment"]' "$JSON_DIR")
+
+    str_login_manager=$(jq -r '.["login-manager"]' "$JSON_DIR")
+
+    str_display_server=$(jq -r '.["display-server"]' "$JSON_DIR")
+
     if [[ ${arrStr_pacman[0]} == "dnf" ]]; then
         str_packages=""
         str_elements=$(jq -r ".packages.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
@@ -131,12 +168,21 @@ parse_json(){
     fi
 }
 
+check_installed() {
+    local cmd="$1"
+    if [[ -n $(command -v "$cmd") ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 clean_up(){
     if [[ ${arrStr_pacman[0]} == "dnf" ]]; then
         printf "\n${GREEN}%s\n${RESET}\n" "Clearing dnf Cache..."
         dnf clean all || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Clean up dnf Cache! '$1'"; exit 1; }
-        exit 0
     fi
+    exit 0
 }
 
 # ███    ███  █████  ██ ███    ██     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████ 
@@ -278,17 +324,19 @@ handle_gits(){
 }
 
 apply_settings(){
-    if [[ "$XDG_CURRENT_DESKTOP" == "GNOME" ]]; then
-        echo "This is GNOME" 
-        # TODO
+    if [[ "$DESKTOP_ENV" == "GNOME" ]]; then
+        echo "This is GNOME"
+    elif [[ "$DESKTOP_ENV" == "KDE Plasma" ]]; then
+        echo "This is KDE Plasma"
     fi
 }
 
 install_flatpaks(){
-    printf "\n${GREEN}%s\n${RESET}\n" "Installing Flatpaks..."
+    printf "\n${GREEN}%s\n${RESET}\n" "Adding Flathub Repo to Flatpak..."
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || { "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Add Flathub Repo to Flatpak!"; exit 1;}
+    printf "\n${GREEN}%s\n${RESET}\n" "Installing Flatpaks..."
     for str_flatpak in "${arrStr_flatpaks[@]}"; do
-        flatpak install -y flathub $str_flatpak
+        flatpak install -y flathub $str_flatpak || { "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Flatpak(s)! '$str_flatpak'"; exit 1;}
     done
 }
 
@@ -308,6 +356,10 @@ install_nvidia_drivers(){
                 dnf makecache || { "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Update the dnf Metadata Cache!"; exit 1;}
                 dnf install -y akmod-nvidia xorg-x11-drv-nvidia-cuda
             fi
+        elif lspci | grep -i amd &> /dev/null; then
+            printf "\n${GREEN}%s\n${RESET}\n" "Primary Video Card is AMD, No Drivers Needed!"
+        else
+            printf "\n${YELLOW}%s\n${RESET}\n" "Primary Video Card is Not Nvidia!"
         fi
     fi
 }
@@ -316,12 +368,71 @@ recommended_kde_config(){
     echo "TODO"
 }
 
-configure_desktop_environment(){
-    if [[ -z $XDG_CURRENT_DESKTOP || -z $DESKTOP_SESSION ]]; then
-        printf "\n${RED}%s\n${RESET}\n" "A Valid Desktop Environment is Not Present!"
-        exit 1
+detect_desktop_environment(){
+    DESKTOP_ENV="UNKNOWN"
+
+    if [[ $(pgrep -x "plasmashell") ]]; then
+        DESKTOP_ENV="KDE Plasma"
+    elif [[ $(pgrep -x "gnome-shell") ]]; then
+        DESKTOP_ENV="GNOME"
+    elif [[ $(pgrep -x "xfce4-panel") ]]; then
+        DESKTOP_ENV="XFCE"
+    elif [[ $(pgrep -x "lxsession") ]]; then
+        DESKTOP_ENV="LXDE"
+    elif [[ $(pgrep -x "mate-panel") ]]; then
+        DESKTOP_ENV="MATE"
+    fi
+}
+
+install_desktop_environment(){
+    if [[ $DESKTOP_ENV != "UNKNOWN" ]]; then
+        printf "\n${GREEN}%s\n${RESET}" "'$DESKTOP_ENV' Already Installed!"
     else
-        echo "'$XDG_CURRENT_DESKTOP' is Already Installed!"
+        printf "\n${YELLOW}%s\n${RESET}" "No Desktop Environment Installed, Installing '$str_desktop_environment'..."
+
+        if [[ ${arrStr_pacman[0]} == "dnf" ]]; then
+            if [[ $(echo "$str_desktop_environment" | tr '[:upper:]' '[:lower:]') == "kde" ]]; then
+                printf "\n${GREEN}%s\n${RESET}\n" "Installing KDE..."
+                dnf update --refresh -y || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to dnf update!"; exit 1; }
+                dnf install -y '@kde-desktop' || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '@kde-desktop'"; exit 1; }
+
+                if ! check_installed "$str_login_manager"; then
+                    printf "\n${GREEN}%s\n${RESET}\n" "Installing '$str_login_manager'..."
+                    dnf install -y "$str_login_manager" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '$str_login_manager'"; exit 1; }
+                    systemctl enable "$str_login_manager" --now || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Enable '$str_login_manager'!"; exit 1; }
+                    printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "Changes will Take Effect on Next Reboot."
+                else
+                    if [[ $(systemctl is-enabled "$str_login_manager") == "enabled" ]]; then
+                        printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "'$str_login_manager' Is Already Installed and Enabled!"
+                    else
+                        printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "'$str_login_manager' Is Already Installed but Not Enabled!"
+                    fi 
+                fi
+            fi
+
+            if [[ $(echo "$str_desktop_environment" | tr '[:upper:]' '[:lower:]') == "gnome" ]]; then
+                printf "\n${GREEN}%s\n${RESET}\n" "Installing GNOME..."
+                dnf update --refresh -y || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to dnf update!"; exit 1; }
+                dnf install -y '@gnome-desktop' || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '@gnome-desktop'"; exit 1; }
+                
+                if ! check_installed "$str_login_manager"; then
+                    printf "\n${GREEN}%s\n${RESET}\n" "Installing '$str_login_manager'..."
+                    dnf install -y "$str_login_manager" || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Install Package(s)! '$str_login_manager'"; exit 1; }
+                    systemctl enable "$str_login_manager" --now || { printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Failed to Enable '$str_login_manager'!"; exit 1; }
+                    printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "Changes will Take Effect on Next Reboot."
+                else
+                    if [[ $(systemctl is-enabled "$str_login_manager") == "enabled" ]]; then
+                        printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "'$str_login_manager' Is Already Installed and Enabled!"
+                    else
+                        printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "'$str_login_manager' Is Already Installed but Not Enabled!"
+                    fi 
+                fi
+            fi
+        fi
+        # TODO Implement more Package Managers and Desktop Environments + Login Managers
+        # TODO Implement configuring of default desktop environment if user has multiple installed: sudo nano /etc/gdm/custom.conf 
+
+
         # Check specified desktop environment
         # Install it and required dependencies
         # Detect the login manager if there is one, if not install gdm
