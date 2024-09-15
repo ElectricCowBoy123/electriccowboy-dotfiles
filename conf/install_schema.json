@@ -1,0 +1,115 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "install": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "nvidia-drivers": {
+            "type": "boolean",
+            "minProperties": 1
+          },
+          "update-os": {
+            "type": "boolean",
+            "minProperties": 1
+          },
+          "dnf": {
+            "type": "object",
+            "minProperties": 1
+          },
+          "apt": {
+            "type": "object",
+            "minProperties": 1
+          }
+        },
+        "required": [
+          "nvidia-drivers",
+          "update-os",
+          "dnf",
+          "apt"
+        ]
+      },
+      "gits": {
+        "type": "object",
+        "minProperties": 1
+      },
+      "flatpaks": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "flatpaks": {
+            "type": "array",
+            "minProperties": 1
+          }
+        },
+        "required": [
+            "flatpaks"
+        ]
+      },
+      "desktop": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "desktop-environment": {
+            "type": "string"
+          },
+          "login-manager": {
+            "type": "string"
+          },
+          "display-server": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "desktop-environment",
+          "login-manager",
+          "display-server"
+        ]
+      },
+      "extensions": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "gnome-extensions": {
+            "type": "array"
+          },
+          "kde-extensions": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "gnome-extensions",
+          "kde-extensions"
+        ]
+      },
+      "settings": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "gnome-settings": {
+            "type": "object"
+          },
+          "kde-settings": {
+            "type": "object"
+          },
+          "backgrounds": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "gnome-settings",
+          "kde-settings",
+          "backgrounds"
+        ]
+      }
+    },
+    "required": [
+      "install",
+      "gits",
+      "flatpaks",
+      "desktop",
+      "extensions",
+      "settings"
+    ]
+  }

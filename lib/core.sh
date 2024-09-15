@@ -50,6 +50,60 @@ system_information(){
     fi
 }
 
+validate_json() {
+    printf "\n${GREEN}%s${RESET}\n" "Validating JSON..."
+    if python -m jsonschema -i "$JSON_DIR" "${REPO_DIR}/conf/install_schema.json" > /dev/null 2>&1; then
+        printf "\n${GREEN}%s${RESET}\n" "JSON is Valid."
+    else
+        printf "\n${RED}%s${RESET}\n" "JSON is Invalid."
+    fi
+}
+
+check_required_packages(){
+    if [[ $# -eq 0 ]]; then
+        printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: No arguments supplied in check_required_packages function!"
+        return 1
+    fi
+
+    local str_packages=("$@")
+    
+    check_package_managers
+    for str_package in "${str_packages[@]}"; do
+        if [[ ! -n $(command -v "$str_package") ]]; then
+            printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "Dependency '$str_package' is Not Installed, Installing..."
+            install_packages "$str_package"
+        fi
+    done
+    
+}
+
+check_required_pip(){
+    if [[ $# -eq 0 ]]; then
+        printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: No arguments supplied in check_required_pip function!"
+        return 1
+    fi
+
+    if ! command -v python &> /dev/null; then
+        printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Python not Installed!"
+        return 1
+    fi
+
+    if ! command -v pip &> /dev/null; then
+        printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: Pip not Installed!"
+        return 1
+    fi
+
+    local str_pips=("$@")
+
+    for str_pip in "${str_pips[@]}"; do
+        if ! pip show "jsonschema" > /dev/null 2>&1; then
+            printf "${ITALIC}${YELLOW}%s\n${RESET}\n" "Dependency '$str_pip' is Not Installed, Installing..."
+            pip install "$str_pip"
+        fi
+    done
+
+}
+
 check_package_managers() {
     # Ensure these are organized in order of importance as first item in array will be primary method of installing packages for the run
     arrStr_pacman=()
@@ -103,49 +157,25 @@ check_package_managers() {
     fi
 }
 
-check_required_packages(){
-    if [[ $# -eq 0 ]]; then
-        printf "${ITALIC}${RED}%s\n${RESET}\n" "[Error]: No arguments supplied in check_required_packages function!"
-        return 1
-    fi
-
-    local str_packages=("$@")
-    
-    for str_package in "${str_packages[@]}"; do
-        if [[ ! -n $(command -v "$str_package") ]]; then
-            printf "${RED}%s is not Installed.\n\n${RESET}" "$str_package"
-            exit 1
-        fi
-    done
-}
-
-validate_json(){
-    #TODO
-    echo "awdawd"
-}
-
 parse_json(){
     while IFS= read -r str_line; do
         arrStr_gits+=("$str_line")
-    done < <(jq -r ".git[] | .[]?" "$JSON_DIR")
+    done < <(jq -r ".gits[] | .[]?" "$JSON_DIR")
 
     while IFS= read -r str_line; do
         arrStr_flatpaks+=("$str_line")
-    done < <(jq -r ".flatpaks[]" "$JSON_DIR")
+    done < <(jq -r ".flatpaks[] | .[]?" "$JSON_DIR")
 
-    str_nvidia_drivers=$(jq -r '.["nvidia-drivers"]' "$JSON_DIR")
+    str_nvidia_drivers=$(jq -r '.install.["nvidia-drivers"]' "$JSON_DIR")
+    str_update_os=$(jq -r '.install.["update-os"]' "$JSON_DIR")
 
-    str_update_os=$(jq -r '.["update-os"]' "$JSON_DIR")
-
-    str_desktop_environment=$(jq -r '.["desktop-environment"]' "$JSON_DIR")
-
-    str_login_manager=$(jq -r '.["login-manager"]' "$JSON_DIR")
-
-    str_display_server=$(jq -r '.["display-server"]' "$JSON_DIR")
+    str_desktop_environment=$(jq -r '.desktop.["desktop-environment"]' "$JSON_DIR")
+    str_login_manager=$(jq -r '.desktop.["login-manager"]' "$JSON_DIR")
+    str_display_server=$(jq -r '.desktop.["display-server"]' "$JSON_DIR")
 
     if [[ ${arrStr_pacman[0]} == "dnf" ]]; then
         str_packages=""
-        str_elements=$(jq -r ".packages.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
+        str_elements=$(jq -r ".install.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
         while IFS= read -r str_element; do
             str_packages+="$str_element "
         done <<< "$str_elements"
@@ -153,7 +183,7 @@ parse_json(){
 
     if [[ ${arrStr_pacman[0]} == "apt-get" ]]; then
         str_packages=""
-        str_elements=$(jq -r ".packages.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
+        str_elements=$(jq -r ".install.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
         while IFS= read -r str_element; do
             str_packages+="$str_element "
         done <<< "$str_elements"
@@ -161,7 +191,7 @@ parse_json(){
 
     if [[ ${arrStr_pacman[0]} == "apt" ]]; then
         str_packages=""
-        str_elements=$(jq -r ".packages.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
+        str_elements=$(jq -r ".install.${arrStr_pacman[0]}[] | .[]" "$JSON_DIR")
         while IFS= read -r str_element; do
             str_packages+="$str_element "
         done <<< "$str_elements"

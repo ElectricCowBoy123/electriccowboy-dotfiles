@@ -33,7 +33,8 @@ export RED="\033[1;31m";readonly RED;
 export YELLOW="\033[1;33m";readonly YELLOW;
 export ITALIC="\033[3m";readonly ITALIC;                                   
 
-arrStr_required_packages=("jq" "sed")
+arrStr_required_packages=("jq" "sed" "pip" "python")
+arrStr_required_pips=("jsonschema")
 readonly REPO_DIR="$(dirname "$(readlink -m "${0}")")"
 readonly JSON_DIR="${REPO_DIR}/conf/install.json"
 source "${REPO_DIR}/lib/core.sh"
@@ -48,6 +49,10 @@ if [ "$EUID" -ne 0 ]; then
   printf "${ITALIC}${RED}%s\n${RESET}" "[Error]: Please Run as Root!"
   exit 1
 fi
+
+check_required_packages $arrStr_required_packages
+check_required_pip $arrStr_required_pips
+validate_json
 
 if [ $# -eq 0 ]; then
     print_header

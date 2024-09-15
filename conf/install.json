@@ -1,5 +1,7 @@
 {
-    "packages": {
+    "install": {
+        "nvidia-drivers": true,
+        "update-os": true,
         "dnf": {
             "essential": [
                 "git",
@@ -37,6 +39,40 @@
                 "steam"
             ]
         }
+    },
+    "gits": {
+        "gnome-gits":[
+            "https://github.com/vinceliuice/WhiteSur-gtk-theme.git",
+            "https://github.com/vinceliuice/McMojave-circle.git",
+            "https://github.com/vinceliuice/WhiteSur-cursors.git",
+            "https://github.com/vinceliuice/WhiteSur-icon-theme.git"
+        ],
+        "other-gits":[
+            "https://github.com/ohmyzsh/ohmyzsh.git",
+            "https://github.com/romkatv/powerlevel10k.git"
+        ],
+        "kde-gits":[
+            "https://github.com/vinceliuice/WhiteSur-kde.git",
+            "https://github.com/matinlotfali/KDE-Rounded-Corners.git",
+            "https://github.com/LukeShortCloud/winesapOS.git"
+        ]
+    },
+    "flatpaks":{
+        "flatpaks": [
+            "ca.desrt.dconf-editor",
+            "net.lutris.Lutris",
+            "com.github.tchx84.Flatseal",
+            "io.missioncenter.MissionCenter",
+            "com.github.Matoking.protontricks",
+            "net.davidotek.pupgui2",
+            "org.freedesktop.Platform.VulkanLayer.gamescope",
+            "org.freedesktop.Platform.VulkanLayer.MangoHud"
+        ]
+    },
+    "desktop":{
+        "desktop-environment": "kde",
+        "login-manager": "gdm",
+        "display-server": "wayland"
     },
     "extensions":{
         "gnome-extensions":[
@@ -78,41 +114,9 @@
         },
         "kde-settings":{
             "enable-this-random-setting": true
-        }
-    },
-    "git": {
-        "gnome-gits":[
-            "https://github.com/vinceliuice/WhiteSur-gtk-theme.git",
-            "https://github.com/vinceliuice/McMojave-circle.git",
-            "https://github.com/vinceliuice/WhiteSur-cursors.git",
-            "https://github.com/vinceliuice/WhiteSur-icon-theme.git"
-        ],
-        "other-gits":[
-            "https://github.com/ohmyzsh/ohmyzsh.git",
-            "https://github.com/romkatv/powerlevel10k.git"
-        ],
-        "kde-gits":[
-            "https://github.com/vinceliuice/WhiteSur-kde.git",
-            "https://github.com/matinlotfali/KDE-Rounded-Corners.git",
-            "https://github.com/LukeShortCloud/winesapOS.git"
+        },
+        "backgrounds": [
+            ""
         ]
-    },
-    "backgrounds": [
-        ""
-    ],
-    "flatpaks": [
-        "ca.desrt.dconf-editor",
-        "net.lutris.Lutris",
-        "com.github.tchx84.Flatseal",
-        "io.missioncenter.MissionCenter",
-        "com.github.Matoking.protontricks",
-        "net.davidotek.pupgui2",
-        "org.freedesktop.Platform.VulkanLayer.gamescope",
-        "org.freedesktop.Platform.VulkanLayer.MangoHud"
-    ],
-    "nvidia-drivers": true,
-    "update-os": true,
-    "desktop-environment": "kde",
-    "login-manager": "gdm",
-    "display-server": "wayland"
+    }
 }
