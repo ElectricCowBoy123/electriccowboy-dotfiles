@@ -51,11 +51,9 @@ system_information(){
 }
 
 validate_json() {
-    printf "\n${GREEN}%s${RESET}\n" "Validating JSON..."
-    if python -m jsonschema -i "$JSON_DIR" "${REPO_DIR}/conf/install_schema.json" > /dev/null 2>&1; then
-        printf "\n${GREEN}%s${RESET}\n" "JSON is Valid."
-    else
-        printf "\n${RED}%s${RESET}\n" "JSON is Invalid."
+    if ! python -m jsonschema -i "$JSON_DIR" "${REPO_DIR}/conf/install_schema.json" > /dev/null 2>&1; then
+        printf "\n${RED}%s${RESET}\n" "JSON is Invalid, Please Verify Schema!"
+        exit 1
     fi
 }
 
